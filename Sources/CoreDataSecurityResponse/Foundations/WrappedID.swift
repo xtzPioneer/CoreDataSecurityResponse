@@ -12,18 +12,24 @@ import CoreData
 /// 包装标识符
 public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
     
+    /// 字符串
     case string(String)
     
+    /// 整数
     case integer(Int)
     
+    /// UUID
     case uuid(UUID)
     
+    /// 对象标识符
     case objectID(NSManagedObjectID)
     
+    /// 标识符
     public var id: Self {
         self
     }
     
+    /// 对象标识符
     public var objectID: NSManagedObjectID? {
         guard case .objectID(let objectID) = self else {
             return nil
@@ -31,6 +37,7 @@ public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
         return objectID
     }
     
+    /// 字符串
     public var string: String? {
         guard case .string(let string) = self else {
             return nil
@@ -38,6 +45,7 @@ public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
         return string
     }
     
+    /// 整数
     public var integer: Int? {
         guard case .integer(let integer) = self else {
             return nil
@@ -45,6 +53,7 @@ public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
         return integer
     }
     
+    /// UUID
     public var uuid: UUID? {
         guard case .uuid(let uuid) = self else {
             return nil

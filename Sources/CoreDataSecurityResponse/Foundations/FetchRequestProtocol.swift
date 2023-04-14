@@ -13,11 +13,8 @@ public protocol FetchRequestProtocol<Result> {
     
     /// 结果
     associatedtype Result: NSManagedObject
-
-    /// 获取主体
-    associatedtype Body: NSFetchRequest<Result>
     
-    /// 主体
-    var body: Self.Body { get }
+    /// 请求主体
+    var body: NSFetchRequest<Result> { get }
     
 }

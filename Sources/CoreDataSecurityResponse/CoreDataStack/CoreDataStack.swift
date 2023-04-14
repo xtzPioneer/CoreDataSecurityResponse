@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-/// CoreData堆栈协议
+/// 核心数据堆栈协议
 public protocol CoreDataStackProtocol {
     
     /// 视图上下文
