@@ -9,10 +9,15 @@ import Foundation
 import Combine
 import CoreData
 
+/// 包装标识符
 public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
+    
     case string(String)
+    
     case integer(Int)
+    
     case uuid(UUID)
+    
     case objectID(NSManagedObjectID)
     
     public var id: Self {
@@ -46,9 +51,11 @@ public enum WrappedID: Equatable, Identifiable, Sendable, Hashable {
         }
         return uuid
     }
+    
 }
 
 extension WrappedID: CustomStringConvertible, CustomDebugStringConvertible {
+    
     public var description: String {
         switch self {
         case .string(let string):
@@ -65,6 +72,7 @@ extension WrappedID: CustomStringConvertible, CustomDebugStringConvertible {
     public var debugDescription: String {
         description
     }
+    
 }
 
 extension NSManagedObjectID: @unchecked Sendable {}

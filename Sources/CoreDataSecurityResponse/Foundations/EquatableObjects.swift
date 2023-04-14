@@ -7,7 +7,10 @@
 
 import Foundation
 
+/// 对比对象
 public struct EquatableObjects<Value>: Equatable where Value: FoundationValueProtocol {
+    
+    /// 任意可转换可观察对象
     public var values: [AnyConvertibleValueObservableObject<Value>]
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -18,9 +21,12 @@ public struct EquatableObjects<Value>: Equatable where Value: FoundationValuePro
         return true
     }
     
+    /// 初始化
+    /// - Parameter values: 任意可转换可观察对象
     public init(_ values: [AnyConvertibleValueObservableObject<Value>]) {
         self.values = values
     }
+    
 }
 
 

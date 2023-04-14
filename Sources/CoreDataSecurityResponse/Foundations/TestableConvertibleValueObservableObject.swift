@@ -8,17 +8,25 @@
 import Foundation
 import Combine
 
+/// 可测试可转换可观察对象协议
 @dynamicMemberLookup public protocol TestableConvertibleValueObservableObject<WrappedValue>: ConvertibleValueObservableObject {
+    
+    /// 包装值
     associatedtype WrappedValue where WrappedValue: FoundationValueProtocol
     
+    /// 包装值
     var _wrappedValue: WrappedValue { get set }
     
+    /// 初始化
+    /// - Parameter wrappedValue: 包装值
     init(_ wrappedValue: WrappedValue)
     
     subscript<Value>(dynamicMember keyPath: WritableKeyPath<WrappedValue, Value>) -> Value { get set }
+    
 }
 
 public extension TestableConvertibleValueObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
+    
     subscript<Value>(dynamicMember keyPath: WritableKeyPath<WrappedValue, Value>) -> Value {
         get {
             _wrappedValue[keyPath: keyPath]
@@ -45,4 +53,5 @@ public extension TestableConvertibleValueObservableObject where ObjectWillChange
     var id: WrappedValue.ID {
         _wrappedValue.id
     }
+    
 }

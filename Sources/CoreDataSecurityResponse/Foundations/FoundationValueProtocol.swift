@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 基础值协议
 public protocol FoundationValueProtocol: Equatable, Identifiable, Sendable {
+    
+    /// 标识符
     var id: WrappedID { get }
+    
 }
