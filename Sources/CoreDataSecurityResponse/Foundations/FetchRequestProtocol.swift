@@ -18,3 +18,13 @@ public protocol FetchRequestProtocol<Result> {
     var body: NSFetchRequest<Result> { get }
     
 }
+
+extension FetchRequestProtocol {
+    
+    /// 擦除到任意
+    /// - Returns: 获取请求
+    public func eraseToAny() -> NSFetchRequest<NSManagedObject>? {
+        body as? NSFetchRequest<NSManagedObject>
+    }
+    
+}

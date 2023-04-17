@@ -12,7 +12,7 @@ import SwiftUI
 
 /// 获取请求
 @propertyWrapper public struct EasyFetchRequest<Input, Output>: DynamicProperty where Input: NSManagedObject, Output: FoundationValueProtocol {
-
+    
     /// 视图上下文
     @Environment(\.managedObjectContext) var viewContext
     
@@ -26,7 +26,7 @@ import SwiftUI
     private let animation: Animation?
     
     /// 获取请求
-    private let fetchRequest: NSFetchRequest<Input>?
+    private let fetchRequest: (any FetchRequestProtocol<Input>)?
     
     /// 更新包装数据源
     @State private var updateWrappedValue = MutableHolder<([AnyConvertibleValueObservableObject<Output>]) -> Void>({ _ in })
@@ -48,7 +48,7 @@ import SwiftUI
     ///   - fetchRequest: 获取请求
     ///   - animation: 动画
     public init(
-        fetchRequest: NSFetchRequest<Input>? = nil,
+        fetchRequest: (any FetchRequestProtocol<Input>)? = nil,
         animation: Animation? = .default
     ) {
         self.animation = animation
@@ -93,8 +93,8 @@ import SwiftUI
         // 获取请求
         if fetcher.value == nil {
             fetcher.value = .init(sender: sender)
-            if let fetchRequest {
-                updateFetchRequest(fetchRequest as! NSFetchRequest<NSManagedObject>)
+            if let fetchRequest, let request = fetchRequest.eraseToAny() {
+                updateFetchRequest(request)
             }
         }
     }
@@ -106,17 +106,17 @@ import SwiftUI
     }
     
     /// 映射获取请求
-    public var projectedValue: NSFetchRequest<Input>? {
+    public var projectedValue: (any FetchRequestProtocol<Input>)? {
         get {
             if let fetchRequest = fetcher.value?.fetcher?.fetchRequest as? NSFetchRequest<Input> {
-                return fetchRequest
+                return FetchRequest(fetchRequest)
             } else {
                 return fetchRequest
             }
         }
         nonmutating set {
-            if let fetchRequest = newValue as? NSFetchRequest<NSManagedObject> {
-                updateFetchRequest(fetchRequest)
+            if let fetchRequest = newValue, let request = fetchRequest.eraseToAny() {
+                updateFetchRequest(request)
             }
         }
     }
@@ -131,7 +131,7 @@ extension EasyFetchRequest {
         /// 值
         var value: T
         
-        /// 内部初始化
+        /// 初始化
         /// - Parameter value: 值
         @inlinable init(_ value: T) {
             self.value = value
@@ -140,4 +140,27 @@ extension EasyFetchRequest {
     }
     
 }
+
+extension EasyFetchRequest {
+    
+    /// 获取请求
+    struct FetchRequest: FetchRequestProtocol {
+        
+        typealias Result = Input
+        
+        /// 获取请求
+        private var fetchRequest: NSFetchRequest<Input>
+        
+        var body: NSFetchRequest<Input> { fetchRequest }
+        
+        /// 初始化
+        /// - Parameter fetchRequest: 获取请求
+        init(_ fetchRequest: NSFetchRequest<Input>) {
+            self.fetchRequest = fetchRequest
+        }
+        
+    }
+    
+}
+
 
